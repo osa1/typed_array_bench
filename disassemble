@@ -1,0 +1,8 @@
+#!/bin/bash
+
+set -e
+set -x
+
+for file in *.wasm; do
+    /usr/local/google/home/omersa/v8/v8/out/x64.release/wami $file --offsets --full-wat > "${file%.wasm}.wat"
+done

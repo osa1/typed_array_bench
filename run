@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -e
+set -x
+
+# Run dart2wasm output without turboshaft:
+# /usr/local/google/home/omersa/v8/v8/out/x64.release/d8 --experimental-wasm-gc \
+#   "$DART_SDK/../pkg/dart2wasm/bin/run_wasm.js" -- "$(realpath -- main.native.mjs)" main.native.wasm
+
+# Run dart2wasm output with turboshaft:
+# /usr/local/google/home/omersa/v8/v8/out/x64.release/d8 --turboshaft-wasm --experimental-wasm-gc \
+#   "$DART_SDK/../pkg/dart2wasm/bin/run_wasm.js" -- "$(realpath -- main.jscm.mjs)" main.jscm.wasm
+
+# Profile dart2wasm output with turboshaft and create a script file to be uploaded to profiler.firefox.com:
+perf record -g -o main.jscm.wasm.perf -F 999 /usr/local/google/home/omersa/v8/v8/out/x64.release/d8 --turboshaft-wasm --perf-basic-prof --experimental-wasm-gc $DART_SDK/../pkg/dart2wasm/bin/run_wasm.js -- `readlink -f main.jscm.mjs` main.jscm.wasm
+
+perf script -F +pid -i main.jscm.wasm.perf > main.jscm.wasm.script.perf
+
+# Runs dart2js output:
+# $DART_SDK/../third_party/d8/linux/d8 $DART_SDK/lib/_internal/js_runtime/lib/preambles/d8.js main.js
+
+# Runs AOT output:
+# ./main.exe
+

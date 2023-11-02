@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+set -x
+
+# $DART_SDK/bin/dart2wasm -O --omit-type-checks main.dart main.native.wasm
+
+$DART_SDK/bin/dart2wasm -O --omit-type-checks --js-compatibility main.dart main.jscm.wasm
+
+# ~/dart/sdk/sdk/out/ReleaseX64/dart --enable-asserts ~/dart/sdk/sdk/pkg/dart2wasm/bin/dart2wasm.dart \
+#     --omit-type-checks --js-compatibility main.dart main.jscm.wasm
+
+# $DART_SDK/../out/ReleaseX64/dart-sdk/bin/dart compile exe main.dart -o main.exe
+
+# $DART_SDK/../out/ReleaseX64/dart-sdk/bin/dart compile js -O4 main.dart -o main.js
